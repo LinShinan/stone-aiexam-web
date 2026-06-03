@@ -12,12 +12,15 @@ const request = axios.create({
 // ===== 请求拦截器 =====
 request.interceptors.request.use(
   config => {
-    // 所有 /api/admin/ 请求自动带 token
+    // 管理端：/api/admin/ 请求自动带 token
     if (config.url.includes('/api/admin/')) {
       const token = localStorage.getItem('token')
-      if (token) {
-        config.headers.token = token
-      }
+      if (token) config.headers.token = token
+    }
+    // 学生端：/api/student/ 请求自动带 studentToken
+    if (config.url.includes('/api/student/')) {
+      const studentToken = localStorage.getItem('studentToken')
+      if (studentToken) config.headers.token = studentToken
     }
     return config
   },
@@ -49,8 +52,10 @@ request.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    console.error('响应错误:', error)
-    ElMessage.error(error.message || '网络错误')
+    const data = error.response?.data
+    const msg = (typeof data === 'string' ? data : data?.message || data?.msg) || error.message
+    console.error('响应错误:', msg, data)
+    ElMessage.error(msg || '网络错误')
     return Promise.reject(error)
   }
 )

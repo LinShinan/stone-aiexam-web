@@ -10,8 +10,27 @@
         <el-button class="btn-nav" @click="goToRanking">
           <el-icon><Trophy /></el-icon>排行榜
         </el-button>
+        <el-button v-if="!studentName" class="btn-student-login" @click="goToLogin">
+          <el-icon><User /></el-icon>学生登录
+        </el-button>
+        <el-dropdown v-else trigger="click">
+          <el-button class="btn-student">
+            <el-icon><UserFilled /></el-icon>{{ studentName }}
+            <el-icon><ArrowDown /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="goToExam">
+                <el-icon><Document /></el-icon>我的考试
+              </el-dropdown-item>
+              <el-dropdown-item @click="handleStudentLogout" divided>
+                <el-icon><SwitchButton /></el-icon>退出登录
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
         <el-button class="btn-admin" @click="goToAdminLogin">
-          <el-icon><User /></el-icon>管理后台
+          <el-icon><Setting /></el-icon>管理后台
         </el-button>
         <el-button class="btn-cta" @click="goToExam">
           <el-icon><Document /></el-icon>进入考试
@@ -191,7 +210,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
   Document, Edit, Trophy, Bell, DataAnalysis, View, Check, User, Files,
-  TrendCharts, VideoPlay, ArrowRight
+  TrendCharts, VideoPlay, ArrowRight, UserFilled, ArrowDown, SwitchButton, Setting
 } from '@element-plus/icons-vue'
 import request from '../utils/request'
 
@@ -311,7 +330,22 @@ const goToPractice = () => router.push('/practice')
 const goToRanking = () => router.push('/exam-ranking')
 const goToAnalysis = () => router.push('/analysis')
 const goToVideos = () => router.push('/videos')
+// 学生登录状态
+const studentName = ref('')
+const checkStudentLogin = () => {
+  const info = localStorage.getItem('studentInfo')
+  if (info) {
+    try { studentName.value = JSON.parse(info).username || '' } catch { studentName.value = '' }
+  }
+}
+const goToLogin = () => router.push('/login')
 const goToAdminLogin = () => router.push('/admin/login')
+const handleStudentLogout = () => {
+  localStorage.removeItem('studentToken')
+  localStorage.removeItem('studentInfo')
+  studentName.value = ''
+  ElMessage.success('已退出登录')
+}
 const showAdminLogin = () => { adminLoginVisible.value = true }
 
 const handleAdminLogin = async () => {
@@ -335,6 +369,7 @@ const handleAdminLogin = async () => {
 }
 
 onMounted(() => {
+  checkStudentLogin()
   getBannerList()
   getNoticeList()
   getPopularQuestions()
@@ -418,6 +453,37 @@ onMounted(() => {
   border-color: #06b6d4 !important;
   color: #22d3ee !important;
   box-shadow: 0 0 14px rgba(6,182,212,0.3);
+}
+
+/* 学生登录按钮 — 蓝紫渐变，比管理后台更显眼 */
+.btn-student-login {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 20px !important;
+  font-weight: 650 !important; font-size: 0.85rem !important; height: 36px; padding: 0 20px;
+  box-shadow: 0 0 14px rgba(99,102,241,0.35);
+  transition: all 0.25s;
+}
+.btn-student-login:hover {
+  box-shadow: 0 0 22px rgba(99,102,241,0.55);
+  transform: scale(1.04);
+}
+
+/* 已登录学生按钮 */
+.btn-student {
+  background: rgba(99,102,241,0.12) !important;
+  color: #a5b4fc !important;
+  border: 1.5px solid rgba(99,102,241,0.3) !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important; font-size: 0.85rem !important; height: 36px; padding: 0 16px;
+  transition: all 0.25s;
+}
+.btn-student:hover {
+  background: rgba(99,102,241,0.22) !important;
+  border-color: #818cf8 !important;
+  color: #c7d2fe !important;
+  box-shadow: 0 0 14px rgba(99,102,241,0.3);
 }
 
 .btn-cta {

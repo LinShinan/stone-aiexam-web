@@ -1,10 +1,5 @@
 <template>
   <div class="exam-start-container">
-    <!-- 背景装饰 -->
-    <div class="bg-orb bg-orb--1"></div>
-    <div class="bg-orb bg-orb--2"></div>
-    <div class="bg-orb bg-orb--3"></div>
-
     <div class="exam-start-card">
       <!-- 头部 -->
       <div class="card-header">
@@ -175,43 +170,56 @@ onMounted(() => { getPaperInfo() })
 </script>
 
 <style scoped>
-/* ===== 页面容器 ===== */
+/* ===== 页面容器 — 与首页 Home.vue 一致 ===== */
 .exam-start-container {
+  --bg-page: #f6f8fc;
+  --bg-card: #ffffff;
+  --border-card: #e8ecf4;
+  --text-heading: #0f172a;
+  --text-body: #475569;
+  --text-muted: #8090a8;
+  --accent-cyan: #06b6d4;
+  --accent-green: #10b981;
+
   min-height: 100vh;
-  background-color: #faf7f2;
-  background-image:
-    /* 网格线 — 淡暖灰，模拟活页纸横线 */
-    linear-gradient(to right, #e8e0d5 1px, transparent 1px),
-    linear-gradient(to bottom, #e8e0d5 1px, transparent 1px),
-    /* 微噪点 — 纸质颗粒感 */
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-  background-size: 24px 24px, 24px 24px, 200px 200px;
+  background: var(--bg-page);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
   position: relative;
   overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ===== 主卡片 ===== */
+/* Aura glow — 与首页一致 */
+.exam-start-container::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 600px; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 15% 0%, rgba(124,58,237,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 45% at 85% 5%, rgba(67,97,238,0.10) 0%, transparent 48%),
+    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(6,182,212,0.08) 0%, transparent 55%),
+    linear-gradient(to bottom, #e8eef8 0%, #f2f4fb 30%, var(--bg-page) 100%);
+}
+
+/* ===== 主卡片 — 与首页卡片一致 ===== */
 .exam-start-card {
-  background: #fff;
-  border-radius: 24px;
-  box-shadow:
-    0 1px 3px rgba(0,0,0,0.04),
-    0 4px 12px rgba(0,0,0,0.04),
-    0 16px 40px rgba(0,0,0,0.06);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06);
   padding: 48px 44px 40px;
   max-width: 540px;
   width: 100%;
   position: relative;
   z-index: 1;
-  animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -224,50 +232,50 @@ onMounted(() => { getPaperInfo() })
 .header-icon {
   width: 56px;
   height: 56px;
-  border-radius: 16px;
-  background: #eef2ff;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(6,182,212,0.12), rgba(16,185,129,0.08));
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
-  color: #6366f1;
+  color: #06b6d4;
 }
 
 .title {
-  font-size: 26px;
+  font-size: 1.55rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-heading);
   margin: 0 0 6px;
   letter-spacing: -0.3px;
 }
 
 .subtitle {
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0;
-  font-size: 14px;
+  font-size: 0.88rem;
 }
 
 /* ===== 试卷信息 ===== */
 .paper-info {
   background: #f8fafc;
+  border: 1px solid var(--border-card);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 32px;
-  border: 1px solid #f1f5f9;
 }
 
 .paper-name {
-  font-size: 18px;
-  color: #0f172a;
+  font-size: 1.05rem;
+  color: var(--text-heading);
   margin: 0 0 6px;
   font-weight: 700;
 }
 
 .paper-description {
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0 0 20px;
   line-height: 1.5;
-  font-size: 14px;
+  font-size: 0.88rem;
 }
 
 .paper-stats {
@@ -284,12 +292,12 @@ onMounted(() => { getPaperInfo() })
   background: #fff;
   padding: 16px 12px;
   border-radius: 12px;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border-card);
   transition: all 0.2s;
 }
 .stat-item:hover {
-  border-color: #e2e8f0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15,23,42,0.04);
 }
 
 .stat-icon {
@@ -302,9 +310,9 @@ onMounted(() => { getPaperInfo() })
   font-size: 18px;
   flex-shrink: 0;
 }
-.stat-icon--count { background: #eef2ff; color: #6366f1; }
-.stat-icon--score { background: #fef3c7; color: #d97706; }
-.stat-icon--time  { background: #ecfeff; color: #0891b2; }
+.stat-icon--count { background: rgba(6,182,212,0.1); color: #0891b2; }
+.stat-icon--score { background: rgba(245,158,11,0.1); color: #d97706; }
+.stat-icon--time  { background: rgba(16,185,129,0.1); color: #059669; }
 
 .stat-text {
   display: flex;
@@ -314,16 +322,15 @@ onMounted(() => { getPaperInfo() })
 }
 
 .stat-value {
-  font-size: 24px;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: #0f172a;
-  font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+  color: var(--text-heading);
   line-height: 1;
 }
 
 .stat-label {
-  font-size: 12px;
-  color: #94a3b8;
+  font-size: 0.75rem;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -334,38 +341,34 @@ onMounted(() => { getPaperInfo() })
 .exam-form :deep(.el-form-item) {
   margin-bottom: 20px;
 }
-.exam-form :deep(.el-form-item__label) {
-  font-weight: 600;
-  color: #334155;
-  margin-bottom: 6px;
-}
 .exam-form :deep(.el-input__wrapper) {
-  border-radius: 12px;
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
   box-shadow: none;
-  padding: 6px 14px;
+  padding: 4px 14px;
   transition: all 0.2s;
 }
 .exam-form :deep(.el-input__wrapper):hover {
   border-color: #cbd5e1;
 }
-.exam-form :deep(.el-input__wrapper.is-focus) {
-  border-color: #6366f1;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+.exam-form :deep(.el-input.is-focus .el-input__wrapper) {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 3px rgba(6,182,212,0.08);
 }
 
-/* ===== 开始按钮 ===== */
+/* ===== 开始按钮 — 青绿渐变，与首页 CTA 一致 ===== */
 .start-btn {
   width: 100%;
   height: 50px;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 600;
-  background: #0f172a !important;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #06b6d4, #10b981) !important;
   border: none !important;
   color: #fff !important;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 16px rgba(6,182,212,0.3), 0 0 32px rgba(16,185,129,0.12);
   transition: all 0.25s ease;
   display: flex;
   align-items: center;
@@ -373,14 +376,8 @@ onMounted(() => { getPaperInfo() })
   gap: 8px;
 }
 .start-btn:hover {
-  background: #6366f1 !important;
-  box-shadow: 0 8px 24px rgba(99,102,241,0.3);
+  box-shadow: 0 0 24px rgba(6,182,212,0.5), 0 0 48px rgba(16,185,129,0.25);
   transform: translateY(-1px);
-}
-.start-btn :deep(span) {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 .btn-arrow {
   transition: transform 0.25s ease;
@@ -392,9 +389,9 @@ onMounted(() => { getPaperInfo() })
 /* ===== 考试规则 ===== */
 .exam-rules {
   background: #f8fafc;
+  border: 1px solid var(--border-card);
   border-radius: 14px;
   padding: 20px 24px;
-  border: 1px solid #f1f5f9;
   position: relative;
 }
 .exam-rules::before {
@@ -403,7 +400,7 @@ onMounted(() => { getPaperInfo() })
   left: 0; top: 16px; bottom: 16px;
   width: 3px;
   border-radius: 0 2px 2px 0;
-  background: #fbbf24;
+  background: #06b6d4;
 }
 
 .rules-header {
@@ -411,11 +408,14 @@ onMounted(() => { getPaperInfo() })
   align-items: center;
   gap: 8px;
   margin-bottom: 14px;
-  color: #92400e;
+  color: #0f172a;
+}
+.rules-header .el-icon {
+  color: #06b6d4;
 }
 .rules-header h4 {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
@@ -429,8 +429,8 @@ onMounted(() => { getPaperInfo() })
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  color: #78716c;
-  font-size: 13px;
+  color: var(--text-body);
+  font-size: 0.82rem;
   line-height: 1.6;
 }
 
@@ -438,7 +438,7 @@ onMounted(() => { getPaperInfo() })
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #d4d4d8;
+  background: #cbd5e1;
   flex-shrink: 0;
   margin-top: 7px;
 }
@@ -447,14 +447,13 @@ onMounted(() => { getPaperInfo() })
 @media (max-width: 640px) {
   .exam-start-card {
     padding: 36px 24px 32px;
-    border-radius: 20px;
+    border-radius: 16px;
   }
-  .title { font-size: 22px; }
+  .title { font-size: 1.3rem; }
   .paper-stats {
-    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }
   .stat-item { padding: 12px 8px; }
-  .stat-value { font-size: 20px; }
+  .stat-value { font-size: 1.2rem; }
 }
 </style>

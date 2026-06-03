@@ -1,27 +1,35 @@
 import request from '../utils/request'
 
-// ===== 题目 CRUD =====
+// ===== 公共端 =====
+
+export function getPublicQuestions(params) {
+  return request.get('/api/common/questions/list', { params })
+}
+
+export function getPublicQuestionById(id) {
+  return request.get(`/api/common/questions/${id}`)
+}
+
+export function getCategoryTree() {
+  return request.get('/api/common/categories/tree')
+}
+
+// ===== 管理端 CRUD =====
 
 export function getQuestionList(params) {
   return request.get('/api/admin/questions/list', { params })
 }
 
 export function createQuestion(data) {
-  return request.post('/api/questions', data)
+  return request.post('/api/admin/questions', data)
 }
 
 export function updateQuestion(id, data) {
-  return request.put(`/api/questions/${id}`, data)
+  return request.put(`/api/admin/questions/${id}`, data)
 }
 
 export function deleteQuestion(id) {
-  return request.delete(`/api/questions/${id}`)
-}
-
-// ===== 分类 =====
-
-export function getCategoryTree() {
-  return request.get('/api/common/categories/tree')
+  return request.delete(`/api/admin/questions/${id}`)
 }
 
 // ===== 批量导入 =====

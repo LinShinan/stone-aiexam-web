@@ -135,7 +135,7 @@ const handleLogin = async () => {
       const target = route.query.redirect || '/admin'
       router.push(target)
     } catch (e) {
-      // axios interceptor handles error message
+      ElMessage.error(e.message || '登录失败，请稍后重试')
     } finally {
       loading.value = false
     }
