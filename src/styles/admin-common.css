@@ -1,0 +1,399 @@
+/* ============================================================
+   ADMIN COMMON STYLES
+   所有管理页面共享的布局和组件样式。
+   在 main.js 中全局导入一次，所有 admin 页面直接使用类名即可。
+   配色体系与首页 Home.vue 完全一致。
+   ============================================================ */
+
+/* ===== 页面根容器 ===== */
+.admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================================================
+   搜索/操作栏卡片
+   用法: <div class="admin-action-card"><div class="admin-action-card-inner">...</div></div>
+   ============================================================ */
+.admin-action-card {
+  background: #ffffff;
+  border: 1px solid #e8ecf4;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.admin-action-card-inner {
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* 搜索行（纵向堆叠布局变体） */
+.admin-action-card-stack {
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ============================================================
+   表格卡片
+   用法: <div class="admin-table-card"><el-table .../></div>
+   ============================================================ */
+.admin-table-card {
+  background: #ffffff;
+  border: 1px solid #e8ecf4;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+/* ============================================================
+   Flex 布局小组件
+   ============================================================ */
+
+/* 搜索条件行 */
+.admin-search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 操作按钮行 */
+.admin-action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 表格操作列按钮组 */
+.admin-action-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+/* 搜索+操作组合行 */
+.admin-search-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.admin-action-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   页面标题上下文
+   用法: <div class="admin-page-title"><span class="admin-page-label">...</span><span class="admin-page-count">...</span></div>
+   ============================================================ */
+.admin-page-title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.admin-page-label {
+  font-weight: 650;
+  color: #0f172a;
+  font-size: 0.92rem;
+}
+
+.admin-page-count {
+  font-size: 0.78rem;
+  color: #8090a8;
+  background: #f8f9fd;
+  padding: 2px 10px;
+  border-radius: 9999px;
+}
+
+/* ============================================================
+   表格工具栏 (分类管理等)
+   ============================================================ */
+.admin-table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e8ecf4;
+  background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+}
+
+.admin-table-toolbar-title {
+  font-weight: 650;
+  color: #0f172a;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-table-toolbar-title::before {
+  content: '';
+  width: 3px;
+  height: 16px;
+  background: #06b6d4;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   分页容器
+   ============================================================ */
+.admin-pagination-wrap {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================================
+   详情展示 (对话框内)
+   ============================================================ */
+.admin-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.admin-detail-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  border: 1px solid #edf0f7;
+}
+
+.admin-detail-label {
+  width: 90px;
+  font-weight: 600;
+  color: #475569;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+}
+
+.admin-detail-value {
+  flex: 1;
+  color: #0f172a;
+  font-size: 0.88rem;
+}
+
+.admin-detail-value-break {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ============================================================
+   搜索输入框尺寸
+   ============================================================ */
+.admin-search-input {
+  width: 240px;
+}
+
+.admin-filter-select {
+  width: 140px;
+}
+
+/* ============================================================
+   提示卡片
+   ============================================================ */
+.admin-tips-card {
+  margin-bottom: 0;
+}
+
+.admin-tips-card .el-alert {
+  border-radius: 16px;
+  border: 1px solid #e8ecf4;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+/* ============================================================
+   侧边分类面板 (题目管理)
+   ============================================================ */
+.admin-sidebar-card {
+  background: #ffffff;
+  border: 1px solid #e8ecf4;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.admin-sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #e8ecf4;
+  background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-sidebar-header h3 {
+  margin: 0;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.admin-sidebar-body {
+  padding: 16px;
+}
+
+/* ============================================================
+   题目卡片中的文本样式
+   ============================================================ */
+.admin-item-title {
+  font-weight: 550;
+  color: #0f172a;
+}
+
+.admin-item-subtitle {
+  font-weight: 500;
+  color: #475569;
+}
+
+.admin-text-muted {
+  color: #8090a8;
+  font-size: 0.82rem;
+}
+
+.admin-link-text {
+  color: #4361ee;
+  font-size: 0.8rem;
+}
+
+/* ============================================================
+   缩略图 & 封面
+   ============================================================ */
+.admin-thumb-sm {
+  width: 80px;
+  height: 45px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.admin-thumb-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 45px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   表单提示
+   ============================================================ */
+.admin-form-tip {
+  font-size: 0.75rem;
+  color: #8090a8;
+  margin-top: 5px;
+}
+
+.admin-form-tip-box {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  background: #f8f9fd;
+  border: 1px solid #edf0f7;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #475569;
+}
+
+.admin-form-tip-box strong {
+  color: #4361ee;
+}
+
+/* ============================================================
+   上传预览
+   ============================================================ */
+.admin-upload-preview {
+  margin-top: 10px;
+  text-align: center;
+  padding: 16px;
+  background: #f8f9fd;
+  border-radius: 12px;
+  border: 1.5px dashed #e0e4f0;
+}
+
+.admin-upload-preview-label {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: #8090a8;
+}
+
+/* ============================================================
+   视频预览
+   ============================================================ */
+.admin-video-preview {
+  text-align: center;
+}
+
+.admin-video-info {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.admin-video-info p {
+  margin: 8px 0;
+  color: #475569;
+}
+
+/* ============================================================
+   批量导入 / AI 生成 对话框
+   ============================================================ */
+.admin-step-content {
+  margin-top: 30px;
+}
+
+.admin-step-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+/* ============================================================
+   两栏布局 (题目管理: 表格 + 侧边分类)
+   ============================================================ */
+.admin-content-layout {
+  display: flex;
+  gap: 20px;
+}
+
+.admin-content-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-content-side {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+@media (max-width: 768px) {
+  .admin-content-layout {
+    flex-direction: column;
+  }
+  .admin-content-side {
+    width: 100%;
+  }
+}
