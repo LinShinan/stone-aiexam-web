@@ -308,7 +308,7 @@ const fetchAllQuestions = async (callback) => {
     if (selectedDifficulty.value) {
       params.difficulty = selectedDifficulty.value
     }
-    const res = await request.get('/api/questions/list', { params })
+    const res = await request.get('/api/admin/questions/list', { params })
     filteredQuestions.value = res.data.records
     
     // 为新获取的题目设置默认分数
@@ -332,7 +332,7 @@ const fetchAllQuestions = async (callback) => {
 // 获取分类树
 const fetchCategories = async () => {
    try {
-    const res = await request.get('/api/categories/tree');
+    const res = await request.get('/api/common/categories/tree');
     categoryTree.value = res.data;
     
     // 构建分类映射表
@@ -475,7 +475,7 @@ const handleManualSubmit = async () => {
   try {
     // 根据是否为编辑模式，调用不同接口
     if (isEditMode.value) {
-      await request.put(`/api/papers/${paperId.value}`, paperData)
+      await request.put(`/api/admin/papers/${paperId.value}`, paperData)
       ElMessage.success('试卷更新成功')
     } else {
       await request.post('/api/papers', paperData)
@@ -514,7 +514,7 @@ const handleAiSubmit = async () => {
   };
 
   try {
-    await request.post('/api/papers/smart', paperData)
+    await request.post('/api/admin/papers/smart', paperData)
     ElMessage.success('AI智能组卷成功，快去试卷列表查看吧！')
     router.push('/admin/paper-manage')
   } catch (error) {
@@ -541,7 +541,7 @@ const getSubCategoriesForType = (type) => {
 // 新增：加载试卷数据用于编辑回显
 const loadPaperDataForEdit = async () => {
   try {
-    const res = await request.get(`/api/papers/${paperId.value}`)
+    const res = await request.get(`/api/admin/papers/${paperId.value}`)
     const paperData = res.data
     
     // 1. 回填表单信息，同时填充手动和AI两个表单

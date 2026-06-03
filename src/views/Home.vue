@@ -10,8 +10,8 @@
         <el-button class="btn-nav" @click="goToRanking">
           <el-icon><Trophy /></el-icon>排行榜
         </el-button>
-        <el-button class="btn-nav" @click="showAdminLogin">
-          <el-icon><User /></el-icon>管理员
+        <el-button class="btn-admin" @click="goToAdminLogin">
+          <el-icon><User /></el-icon>管理后台
         </el-button>
         <el-button class="btn-cta" @click="goToExam">
           <el-icon><Document /></el-icon>进入考试
@@ -239,20 +239,20 @@ const statCards = [
 
 const getBannerList = async () => {
   try {
-    const res = await request.get('/api/banners/active')
+    const res = await request.get('/api/common/banners/active')
     bannerList.value = res.data || []
   } catch (error) {
     bannerList.value = [
-      { id: 1, title: '智能AI生成题目', description: '利用先进AI技术，快速生成高质量考试题目', imageUrl: '/api/banners/ai-generate.jpg', linkUrl: '/ai-generate', isActive: true },
-      { id: 2, title: '海量题库资源', description: '覆盖多个学科领域，题目类型丰富多样', imageUrl: '/api/banners/question-bank.jpg', linkUrl: '/practice', isActive: true },
-      { id: 3, title: '智能学习分析', description: '详细的答题报告，帮助您精准提升', imageUrl: '/api/banners/analysis.jpg', linkUrl: '/analysis', isActive: true }
+      { id: 1, title: '智能AI生成题目', description: '利用先进AI技术，快速生成高质量考试题目', imageUrl: '/api/admin/banners/ai-generate.jpg', linkUrl: '/ai-generate', isActive: true },
+      { id: 2, title: '海量题库资源', description: '覆盖多个学科领域，题目类型丰富多样', imageUrl: '/api/admin/banners/question-bank.jpg', linkUrl: '/practice', isActive: true },
+      { id: 3, title: '智能学习分析', description: '详细的答题报告，帮助您精准提升', imageUrl: '/api/admin/banners/analysis.jpg', linkUrl: '/analysis', isActive: true }
     ]
   }
 }
 
 const getNoticeList = async () => {
   try {
-    const res = await request.get('/api/notices/latest', { params: { limit: 5 } })
+    const res = await request.get('/api/common/notices/latest', { params: { limit: 5 } })
     noticeList.value = res.data || []
   } catch (error) {
     noticeList.value = [
@@ -265,7 +265,7 @@ const getNoticeList = async () => {
 
 const getPopularQuestions = async () => {
   try {
-    const res = await request.get('/api/questions/popular', { params: { size: 6 } })
+    const res = await request.get('/api/common/questions/popular', { params: { size: 6 } })
     popularQuestions.value = res.data || []
   } catch (error) { /* fallback empty */ }
 }
@@ -311,6 +311,7 @@ const goToPractice = () => router.push('/practice')
 const goToRanking = () => router.push('/exam-ranking')
 const goToAnalysis = () => router.push('/analysis')
 const goToVideos = () => router.push('/videos')
+const goToAdminLogin = () => router.push('/admin/login')
 const showAdminLogin = () => { adminLoginVisible.value = true }
 
 const handleAdminLogin = async () => {
@@ -319,8 +320,9 @@ const handleAdminLogin = async () => {
     if (valid) {
       adminLoginLoading.value = true
       try {
-        const res = await request.post('/api/user/login', adminLoginForm)
+        const res = await request.post('/api/auth/login', adminLoginForm)
         localStorage.setItem('userInfo', JSON.stringify(res.data))
+        if (res.data.token) localStorage.setItem('token', res.data.token)
         ElMessage.success('登录成功，正在跳转到管理员后台...')
         adminLoginVisible.value = false
         adminLoginForm.username = ''
@@ -402,6 +404,21 @@ onMounted(() => {
   transition: all 0.2s;
 }
 .btn-nav:hover { color: #fff !important; background: rgba(255,255,255,0.08) !important; }
+
+.btn-admin {
+  background: rgba(6,182,212,0.12) !important;
+  color: #06b6d4 !important;
+  border: 1.5px solid rgba(6,182,212,0.35) !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important; font-size: 0.85rem !important; height: 36px; padding: 0 18px;
+  transition: all 0.25s;
+}
+.btn-admin:hover {
+  background: rgba(6,182,212,0.22) !important;
+  border-color: #06b6d4 !important;
+  color: #22d3ee !important;
+  box-shadow: 0 0 14px rgba(6,182,212,0.3);
+}
 
 .btn-cta {
   background: linear-gradient(135deg, #06b6d4, #10b981) !important;

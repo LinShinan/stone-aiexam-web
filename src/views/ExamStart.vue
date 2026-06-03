@@ -119,7 +119,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { getPaperById } from '../api/paper.js'
+import { getPublicPaperById } from '../api/paper.js'
 import { startExam } from '../api/exam.js'
 import {
   EditPen, Collection, Trophy, Clock, User, ArrowRight, WarningFilled
@@ -144,7 +144,7 @@ const rules = {
 const getPaperInfo = async () => {
   try {
     const paperId = route.params.paperId
-    const res = await getPaperById(paperId)
+    const res = await getPublicPaperById(paperId)
     paperInfo.value = res.data
   } catch (error) {
     ElMessage.error('获取试卷信息失败')

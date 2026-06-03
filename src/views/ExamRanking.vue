@@ -183,7 +183,7 @@ import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Refresh, User, TrendCharts, Trophy, Bottom, HomeFilled, Document, Edit, Filter } from '@element-plus/icons-vue'
 import { getExamRanking } from '../api/exam'
-import { getPapers } from '../api/paper.js'
+import { getPublicPapers } from '../api/paper.js'
 
 const loading = ref(false)
 const rankingList = ref([])
@@ -220,7 +220,7 @@ const statsTitle = computed(() => {
 
 const getPaperList = async () => {
   try {
-    const res = await getPapers({ status: 'PUBLISHED' })
+    const res = await getPublicPapers()
     paperList.value = res.data || []
   } catch (error) {
     ElMessage.error('获取试卷列表失败')

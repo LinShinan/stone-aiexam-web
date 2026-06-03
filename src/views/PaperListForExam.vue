@@ -134,7 +134,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getPapers } from '../api/paper.js'
+import { getPublicPapers } from '../api/paper.js'
 import {
   Search, Collection, Trophy, Clock, Document, ArrowRight, HomeFilled, Edit
 } from '@element-plus/icons-vue'
@@ -148,8 +148,7 @@ const startingExamId = ref(null)
 const fetchPublishedPapers = async () => {
   loading.value = true
   try {
-    const params = { status: 'PUBLISHED', name: searchKeyword.value }
-    const res = await getPapers(params)
+    const res = await getPublicPapers({ name: searchKeyword.value })
     paperList.value = res.data || []
   } catch (error) {
     ElMessage.error('获取试卷列表失败')

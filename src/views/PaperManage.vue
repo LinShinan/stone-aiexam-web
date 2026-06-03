@@ -152,7 +152,7 @@ const updateStatus = async (paper, status) => {
 const deletePaper = async (paper) => {
   try {
     await ElMessageBox.confirm(`确定要删除试卷"${paper.name}"吗？`, '确认删除', { confirmButtonText: '确认删除', cancelButtonText: '取消', type: 'danger' })
-    await request.delete(`/api/papers/${paper.id}`)
+    await request.delete(`/api/admin/papers/${paper.id}`)
     ElMessage.success('试卷删除成功')
     await getPaperList()
   } catch (error) {
@@ -164,7 +164,7 @@ const handleBatchDelete = async () => {
   if (selectedPapers.value.length === 0) return ElMessage.warning('请先选择要删除的试卷')
   try {
     await ElMessageBox.confirm(`确定要删除选中的 ${selectedPapers.value.length} 份试卷吗？`, '确认批量删除', { confirmButtonText: '确认删除', cancelButtonText: '取消', type: 'danger' })
-    const deletePromises = selectedPapers.value.map(p => request.delete(`/api/papers/${p.id}`))
+    const deletePromises = selectedPapers.value.map(p => request.delete(`/api/admin/papers/${p.id}`))
     await Promise.all(deletePromises)
     ElMessage.success(`成功删除 ${selectedPapers.value.length} 份试卷`)
     selectedPapers.value = []

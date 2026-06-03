@@ -162,7 +162,7 @@ const imageInputType = ref('upload')
 const uploadRef = ref()
 const uploadLoading = ref(false)
 
-const uploadAction = ref('/api/banners/upload-image')
+const uploadAction = ref('/api/admin/banners/upload-image')
 const uploadHeaders = ref({})
 
 const bannerForm = reactive({ id: null, title: '', description: '', imageUrl: '', linkUrl: '', sortOrder: 0, isActive: true })

@@ -166,7 +166,7 @@ const formRules = {
 const fetchCategories = async () => {
   loading.value = true
   try {
-    const response = await request.get('/api/categories/tree')
+    const response = await request.get('/api/common/categories/tree')
     categoryTree.value = response.data
     allCategories.value = flattenTree(response.data || [])
   } catch (error) {
@@ -229,7 +229,7 @@ const viewCategory = (category) => {
 const deleteCategory = async (category) => {
   try {
     await ElMessageBox.confirm(`确定要删除分类 "${category.name}" 吗？`, '删除确认', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
-    await request.delete(`/api/categories/${category.id}`)
+    await request.delete(`/api/admin/categories/${category.id}`)
     ElMessage.success('删除成功')
     fetchCategories()
   } catch (error) {
@@ -241,7 +241,7 @@ const saveCategory = async () => {
   try {
     await categoryFormRef.value.validate()
     categoryForm.level = categoryForm.parentId ? 2 : 1
-    const url = isEdit.value ? `/api/categories` : '/api/categories'
+    const url = isEdit.value ? `/api/admin/categories` : '/api/admin/categories'
     const method = isEdit.value ? 'put' : 'post'
     await request[method](url, categoryForm)
     ElMessage.success(isEdit.value ? '更新成功' : '新增成功')

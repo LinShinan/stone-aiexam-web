@@ -164,7 +164,7 @@ const emit = defineEmits(['page'])
 const toggleAnswer = async (row) => {
   if (!row.showAnswer) {
     // 懒加载：只在"查看答案"时请求后端
-    const res = await request.get(`/api/questions/${row.id}`)
+    const res = await request.get(`/api/common/questions/${row.id}`)
     if (res && res.data) {
       Object.assign(row, res.data)
       row.showAnswer = true
@@ -237,7 +237,7 @@ const handleCurrentChange = (current) => {
 // 查看题目详情
 const viewQuestionDetail = async (row) => {
   try {
-    const res = await request.get(`/api/questions/${row.id}`)
+    const res = await request.get(`/api/common/questions/${row.id}`)
     viewQuestion.value = res.data
     viewDialogVisible.value = true
   } catch (error) {

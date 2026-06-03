@@ -13,6 +13,12 @@ const routes = [
     meta: { title: '首页' }
   },
   {
+    path: '/admin/login',
+    name: 'AdminLogin',
+    component: () => import('../views/AdminLogin.vue'),
+    meta: { title: '管理员登录' }
+  },
+  {
     path: '/admin',
     name: 'AdminLayout',
     component: () => import('../views/AdminLayout.vue'),
@@ -219,7 +225,17 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title + ' - Stone AI Exam'
   }
-  
+
+  // 管理端鉴权：未登录访问 /admin/*（除 /admin/login）→ 跳转登录页
+  if (to.path.startsWith('/admin') && to.path !== '/admin/login') {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      // 带上来源路径，登录后可跳回
+      next({ path: '/admin/login', query: { redirect: to.fullPath } })
+      return
+    }
+  }
+
   // 防止从考试结果页面返回到考试页面的逻辑
   if (from.path && from.path.includes('/exam-result/') && to.path && to.path.includes('/exam/')) {
     // 如果用户试图从结果页面返回到考试页面
