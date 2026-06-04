@@ -73,18 +73,6 @@ const routes = [
         meta: { title: '公告管理', subtitle: '系统' }
       },
       {
-        path: 'video-manage',
-        name: 'VideoManage',
-        component: () => import('../views/VideoManage.vue'),
-        meta: { title: '视频管理', subtitle: '视频' }
-      },
-      {
-        path: 'video-category-manage',
-        name: 'VideoCategoryManage',
-        component: () => import('../views/VideoCategoryManage.vue'),
-        meta: { title: '视频分类管理', subtitle: '视频' }
-      },
-      {
         path: 'paper-create',
         name: 'PaperCreate',
         component: () => import('../views/PaperCreate.vue'),
@@ -133,24 +121,6 @@ const routes = [
     name: 'Practice',
     component: () => import('../views/Practice.vue'),
     meta: { title: '刷题练习' }
-  },
-  // 3分钟技术短视频相关路由
-  {
-    path: '/videos',
-    name: 'VideoList',
-    component: () => import('../views/VideoList.vue'),
-    meta: { title: '3分钟技术短视频' }
-  },
-  {
-    path: '/videos/:id',
-    name: 'VideoDetail',
-    component: () => import('../views/VideoDetail.vue'),
-    meta: { title: '3分钟技术短视频' }
-  },
-  // 兼容 /video/:id 旧路径，重定向到 /videos/:id
-  {
-    path: '/video/:id',
-    redirect: to => `/videos/${to.params.id}`
   },
   // 企业真题相关路由
   {

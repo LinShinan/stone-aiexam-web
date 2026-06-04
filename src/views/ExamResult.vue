@@ -273,7 +273,7 @@ import {
   Loading, ChatDotRound, HomeFilled, Trophy, Document, User,
   Clock, Check, Close, SemiSelect, Timer, RefreshRight, Download
 } from '@element-plus/icons-vue'
-import { getExamRecordById, getExamRanking } from '../api/exam.js'
+import { getExamRecordById, getAdminExamRecordById, getExamRanking } from '../api/exam.js'
 import html2canvas from 'html2canvas'
 
 const route = useRoute()
@@ -461,12 +461,16 @@ const fetchRankingInfo = async (recordId, paperId) => {
   } catch (e) { /* 排名获取失败不影响页面 */ }
 }
 
+// 判断是否为管理员身份
+const isAdmin = () => !!localStorage.getItem('token')
+
 const fetchExamResult = async () => {
   loading.value = true
   try {
     const examRecordId = route.params.id || route.query.id
     if (!examRecordId) throw new Error('缺少考试记录ID')
-    const res = await getExamRecordById(examRecordId)
+    const api = isAdmin() ? getAdminExamRecordById : getExamRecordById
+    const res = await api(examRecordId)
     examRecord.value = res.data
     if (examRecord.value.status === '已批阅') {
       await fetchRankingInfo(examRecord.value.id, examRecord.value.examId)

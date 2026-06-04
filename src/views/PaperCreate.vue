@@ -308,7 +308,7 @@ const fetchAllQuestions = async (callback) => {
     if (selectedDifficulty.value) {
       params.difficulty = selectedDifficulty.value
     }
-    const res = await request.get('/api/admin/questions/list', { params })
+    const res = await request.get('/api/common/questions/list', { params })
     filteredQuestions.value = res.data.records
     
     // 为新获取的题目设置默认分数

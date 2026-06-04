@@ -21,6 +21,12 @@
           @select="handleMenuSelect"
           router
         >
+          <!-- 工作台（首页仪表盘） -->
+          <el-menu-item index="/admin/welcome" class="top-level-item">
+            <el-icon class="menu-item-icon"><HomeFilled /></el-icon>
+            <span>工作台</span>
+          </el-menu-item>
+
           <!-- 试题管理 -->
           <el-submenu index="question">
             <template #title>
@@ -30,9 +36,11 @@
               </div>
             </template>
             <el-menu-item index="/admin/question-manage">
+              <el-icon class="menu-item-icon"><List /></el-icon>
               <span>题目管理</span>
             </el-menu-item>
             <el-menu-item index="/admin/category-manage">
+              <el-icon class="menu-item-icon"><Folder /></el-icon>
               <span>类别管理</span>
             </el-menu-item>
           </el-submenu>
@@ -46,9 +54,11 @@
               </div>
             </template>
             <el-menu-item index="/admin/paper-manage">
+              <el-icon class="menu-item-icon"><DocumentChecked /></el-icon>
               <span>试卷管理</span>
             </el-menu-item>
             <el-menu-item index="/admin/score-manage">
+              <el-icon class="menu-item-icon"><TrendCharts /></el-icon>
               <span>成绩管理</span>
             </el-menu-item>
           </el-submenu>
@@ -62,28 +72,15 @@
               </div>
             </template>
             <el-menu-item index="/admin/banner-manage">
+              <el-icon class="menu-item-icon"><PictureFilled /></el-icon>
               <span>轮播图管理</span>
             </el-menu-item>
             <el-menu-item index="/admin/notice-manage">
+              <el-icon class="menu-item-icon"><Bell /></el-icon>
               <span>公告管理</span>
             </el-menu-item>
           </el-submenu>
 
-          <!-- 视频管理 -->
-          <el-submenu index="video">
-            <template #title>
-              <div class="menu-title-wrap">
-                <el-icon class="menu-group-icon"><VideoPlay /></el-icon>
-                <span>视频管理</span>
-              </div>
-            </template>
-            <el-menu-item index="/admin/video-manage">
-              <span>视频管理</span>
-            </el-menu-item>
-            <el-menu-item index="/admin/video-category-manage">
-              <span>视频分类</span>
-            </el-menu-item>
-          </el-submenu>
         </el-menu>
       </nav>
 
@@ -103,8 +100,8 @@
 
     <!-- 右侧内容区 -->
     <main class="main-content">
-      <!-- 页面头部 -->
-      <header class="page-header">
+      <!-- 页面头部（工作台页面隐藏） -->
+      <header class="page-header" v-if="route.path !== '/admin/welcome'">
         <div class="header-left">
           <div class="header-badge">{{ route.meta.subtitle || 'ADMIN' }}</div>
           <h1 class="header-title">{{ route.meta.title || '管理后台' }}</h1>
@@ -126,7 +123,8 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  Document, Files, Picture, VideoPlay, UserFilled
+  Document, Files, Picture, UserFilled, HomeFilled,
+  List, Folder, DocumentChecked, TrendCharts, PictureFilled, Bell
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -263,8 +261,16 @@ onUnmounted(() => {
   font-size: 0.93rem;
   font-weight: 520;
   transition: all 0.2s ease;
-  padding-left: 52px !important;
+  padding-left: 44px !important;
   position: relative;
+}
+
+/* 顶层菜单项（工作台）对齐 submenu 标题 */
+.sidebar-menu :deep(.el-menu-item.top-level-item) {
+  padding-left: 44px !important;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .sidebar-menu :deep(.el-menu-item):hover {
@@ -334,6 +340,18 @@ onUnmounted(() => {
 }
 
 .sidebar-menu :deep(.el-submenu.is-opened) .menu-group-icon {
+  color: #06b6d4;
+}
+
+/* 子菜单项图标 */
+.menu-item-icon {
+  margin-right: 10px;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.2s;
+}
+
+.sidebar-menu :deep(.el-menu-item.is-active) .menu-item-icon {
   color: #06b6d4;
 }
 

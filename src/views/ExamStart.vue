@@ -7,7 +7,7 @@
           <el-icon :size="36"><EditPen /></el-icon>
         </div>
         <h2 class="title">开始考试</h2>
-        <p class="subtitle">请确认试卷信息并填写姓名后开始</p>
+        <p class="subtitle">请确认试卷信息后开始考试</p>
       </div>
 
       <!-- 试卷信息 -->
@@ -45,41 +45,25 @@
         </div>
       </div>
 
-      <!-- 表单 -->
-      <el-form
-        ref="formRef"
-        :model="form"
-        :rules="rules"
-        class="exam-form"
-        @submit.prevent="handleStartExam"
-      >
-        <el-form-item prop="studentName">
-          <el-input
-            v-model="form.studentName"
-            placeholder="请输入您的姓名"
-            size="large"
-            maxlength="20"
-            show-word-limit
-          >
-            <template #prefix>
-              <el-icon><User /></el-icon>
-            </template>
-          </el-input>
-        </el-form-item>
+      <!-- 考生信息（自动从登录态获取） -->
+      <div class="student-info" v-if="studentName">
+        <el-icon><User /></el-icon>
+        <span>考生：<strong>{{ studentName }}</strong></span>
+      </div>
 
-        <el-form-item>
-          <el-button
-            type="primary"
-            size="large"
-            @click="handleStartExam"
-            :loading="loading"
-            class="start-btn"
-          >
-            <span v-if="!loading">开始考试</span>
-            <el-icon class="btn-arrow"><ArrowRight /></el-icon>
-          </el-button>
-        </el-form-item>
-      </el-form>
+      <!-- 开始按钮 -->
+      <div class="exam-form">
+        <el-button
+          type="primary"
+          size="large"
+          @click="handleStartExam"
+          :loading="loading"
+          class="start-btn"
+        >
+          <span v-if="!loading">开始考试</span>
+          <el-icon class="btn-arrow"><ArrowRight /></el-icon>
+        </el-button>
+      </div>
 
       <!-- 考试规则 -->
       <div class="exam-rules">
@@ -123,18 +107,19 @@ import {
 const route = useRoute()
 const router = useRouter()
 
-const formRef = ref(null)
 const loading = ref(false)
 const paperInfo = ref(null)
 
-const form = ref({ studentName: '' })
-
-const rules = {
-  studentName: [
-    { required: true, message: '请输入考生姓名', trigger: 'blur' },
-    { min: 2, max: 20, message: '姓名长度在 2 到 20 个字符', trigger: 'blur' }
-  ]
+// 从登录态获取考生姓名
+const getStudentName = () => {
+  try {
+    const info = JSON.parse(localStorage.getItem('studentInfo') || '{}')
+    return info.realName || info.username || ''
+  } catch {
+    return ''
+  }
 }
+const studentName = getStudentName()
 
 const getPaperInfo = async () => {
   try {
@@ -148,11 +133,17 @@ const getPaperInfo = async () => {
 }
 
 const handleStartExam = async () => {
+  // 安全检查：未登录或姓名获取失败则跳转登录
+  if (!studentName) {
+    ElMessage.warning('请先登录后再参加考试')
+    router.push({ path: '/login', query: { redirect: route.fullPath } })
+    return
+  }
+
   try {
-    await formRef.value.validate()
     loading.value = true
     const paperId = route.params.paperId
-    const res = await startExam(paperId, form.value.studentName)
+    const res = await startExam(paperId)
     ElMessage.success('考试创建成功，正在跳转...')
     router.push(`/exam/${res.data.id}`)
   } catch (error) {
@@ -334,27 +325,27 @@ onMounted(() => { getPaperInfo() })
   font-weight: 500;
 }
 
-/* ===== 表单 ===== */
+/* ===== 考生信息 ===== */
+.student-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  color: #0369a1;
+  font-size: 0.9rem;
+}
+.student-info .el-icon {
+  color: #0ea5e9;
+}
+
+/* ===== 开始按钮容器 ===== */
 .exam-form {
   margin-bottom: 28px;
-}
-.exam-form :deep(.el-form-item) {
-  margin-bottom: 20px;
-}
-.exam-form :deep(.el-input__wrapper) {
-  border-radius: 10px;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  box-shadow: none;
-  padding: 4px 14px;
-  transition: all 0.2s;
-}
-.exam-form :deep(.el-input__wrapper):hover {
-  border-color: #cbd5e1;
-}
-.exam-form :deep(.el-input.is-focus .el-input__wrapper) {
-  border-color: #06b6d4;
-  box-shadow: 0 0 0 3px rgba(6,182,212,0.08);
 }
 
 /* ===== 开始按钮 — 青绿渐变，与首页 CTA 一致 ===== */

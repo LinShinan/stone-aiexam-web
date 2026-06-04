@@ -20,10 +20,6 @@
             <div class="feature-icon"><el-icon><DataAnalysis /></el-icon></div>
             <span>数据统计 · 成绩分析</span>
           </div>
-          <div class="feature-item">
-            <div class="feature-icon"><el-icon><VideoPlay /></el-icon></div>
-            <span>视频审核 · 系统配置</span>
-          </div>
         </div>
       </div>
 
@@ -95,7 +91,7 @@
 import { ref, reactive, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { User, Lock, ArrowLeft, Document, DataAnalysis, VideoPlay, WarningFilled } from '@element-plus/icons-vue'
+import { User, Lock, ArrowLeft, Document, DataAnalysis, WarningFilled } from '@element-plus/icons-vue'
 import request from '../utils/request'
 
 const router = useRouter()

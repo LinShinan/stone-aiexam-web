@@ -6,12 +6,12 @@ import request from '../utils/request'
 
 // ===== 学生端 =====
 
-// 开始考试
-export function startExam(paperId, studentName) {
+// 开始考试（学生信息由后端从 token 解析）
+export function startExam(paperId) {
   return request({
     url: '/api/student/exams/start',
     method: 'post',
-    data: { paperId, studentName }
+    data: { paperId }
   })
 }
 
@@ -41,6 +41,11 @@ export function getMyExamRecords() {
 }
 
 // ===== 管理端 =====
+
+// 获取考试记录详情
+export function getAdminExamRecordById(id) {
+  return request.get(`/api/admin/exams/${id}`)
+}
 
 // 分页查询考试记录
 export function getExamRecords(params) {

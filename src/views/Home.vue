@@ -156,21 +156,6 @@
         </div>
       </div>
 
-      <!-- 统计数据 -->
-      <div class="stats-section">
-        <div class="stats-grid">
-          <div class="stat-card" v-for="stat in statCards" :key="stat.label" :style="{ '--stat-bg': stat.bg, '--stat-color': stat.gradient }">
-            <div class="stat-icon-wrap">
-              <el-icon class="stat-icon"><component :is="stat.icon" /></el-icon>
-            </div>
-            <div class="stat-content">
-              <div class="stat-number">{{ stat.value() }}</div>
-              <div class="stat-label">{{ stat.label }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <!-- 管理员登录对话框 -->
@@ -209,8 +194,8 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
-  Document, Edit, Trophy, Bell, DataAnalysis, View, Check, User, Files,
-  TrendCharts, VideoPlay, ArrowRight, UserFilled, ArrowDown, SwitchButton, Setting
+  Document, Edit, Trophy, Bell, View, Check, User,
+  ArrowRight, UserFilled, ArrowDown, SwitchButton, Setting
 } from '@element-plus/icons-vue'
 import request from '../utils/request'
 
@@ -226,7 +211,6 @@ const noticeChunks = computed(() => {
   return chunks
 })
 const popularQuestions = ref([])
-const stats = ref({ questionCount: 0, userCount: 0, examCount: 0, todayExamCount: 0 })
 
 const adminLoginVisible = ref(false)
 const adminLoginLoading = ref(false)
@@ -245,16 +229,8 @@ const actionCards = [
   { title: '智能考试', desc: 'AI 自动出题，实时批阅', icon: Document, gradient: 'linear-gradient(135deg, #6366f1, #3b82f6)', shadow: 'rgba(99,102,241,0.3)', action: () => router.push('/exam/list') },
   { title: '智能刷题', desc: 'AI 推荐题目，个性化练习', icon: Edit, gradient: 'linear-gradient(135deg, #06b6d4, #10b981)', shadow: 'rgba(6,182,212,0.3)', action: () => router.push('/practice') },
   { title: '学习排行', desc: '实时排名竞技，激发动力', icon: Trophy, gradient: 'linear-gradient(135deg, #f59e0b, #ef4444)', shadow: 'rgba(245,158,11,0.3)', action: () => router.push('/exam-ranking') },
-  { title: 'AI 分析', desc: '智能学习报告，个性化建议', icon: DataAnalysis, gradient: 'linear-gradient(135deg, #ec4899, #8b5cf6)', shadow: 'rgba(236,72,153,0.3)', action: () => router.push('/analysis') },
-  { title: '视频百科', desc: '技术点讲解视频，分类学习', icon: VideoPlay, gradient: 'linear-gradient(135deg, #38bdf8, #0284c7)', shadow: 'rgba(56,189,248,0.3)', action: () => router.push('/videos') },
 ]
 
-const statCards = [
-  { label: '题目总数', icon: Document, gradient: 'linear-gradient(135deg, #06b6d4, #10b981)', bg: 'rgba(6,182,212,0.08)', value: () => stats.value.questionCount || 0 },
-  { label: '用户总数', icon: User, gradient: 'linear-gradient(135deg, #7c3aed, #a855f7)', bg: 'rgba(124,58,237,0.08)', value: () => stats.value.userCount || 0 },
-  { label: '考试场次', icon: Files, gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)', bg: 'rgba(59,130,246,0.08)', value: () => stats.value.examCount || 0 },
-  { label: '今日考试', icon: TrendCharts, gradient: 'linear-gradient(135deg, #f97316, #ef4444)', bg: 'rgba(249,115,22,0.08)', value: () => stats.value.todayExamCount || 0 },
-]
 
 const getBannerList = async () => {
   try {
@@ -289,20 +265,6 @@ const getPopularQuestions = async () => {
   } catch (error) { /* fallback empty */ }
 }
 
-const getStats = async () => {
-  try {
-    const res = await request.get('/api/stats/overview')
-    if (res.code === 200) {
-      stats.value = {
-        questionCount: res.data.questionCount || 0,
-        userCount: res.data.userCount || 0,
-        examCount: res.data.examCount || 0,
-        todayExamCount: res.data.todayExamCount || 0
-      }
-    }
-  } catch (error) { /* keep defaults */ }
-}
-
 const handleBannerClick = (banner) => {
   if (banner.linkUrl) {
     if (banner.linkUrl.startsWith('http')) window.open(banner.linkUrl, '_blank')
@@ -328,8 +290,6 @@ const getDifficultyText = (d) => ({ EASY: '简单', MEDIUM: '中等', HARD: '困
 const goToExam = () => router.push('/exam/list')
 const goToPractice = () => router.push('/practice')
 const goToRanking = () => router.push('/exam-ranking')
-const goToAnalysis = () => router.push('/analysis')
-const goToVideos = () => router.push('/videos')
 // 学生登录状态
 const studentName = ref('')
 const checkStudentLogin = () => {
@@ -373,7 +333,6 @@ onMounted(() => {
   getBannerList()
   getNoticeList()
   getPopularQuestions()
-  getStats()
 })
 </script>
 
@@ -635,11 +594,11 @@ onMounted(() => {
   font-size: 1.55rem; font-weight: 700; color: var(--text-heading);
   text-align: center; margin: 0 0 40px; letter-spacing: -0.3px;
 }
-.action-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.action-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 800px; margin: 0 auto; }
 
 .action-card {
   background: var(--bg-card); border: 1px solid var(--border-card);
-  border-radius: 16px; padding: 32px 16px 28px;
+  border-radius: 16px; padding: 40px 24px 36px;
   text-align: center; cursor: pointer;
   box-shadow: var(--shadow-card);
   transition: all 0.25s;
@@ -651,12 +610,12 @@ onMounted(() => {
 }
 
 .card-icon-wrap {
-  width: 54px; height: 54px; margin: 0 auto 16px; border-radius: 14px;
+  width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.25s;
 }
 .action-card:hover .card-icon-wrap { transform: scale(1.08); }
-.card-icon { font-size: 1.4rem; color: #fff; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
+.card-icon { font-size: 1.6rem; color: #fff; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
 .action-card h3 { font-size: 0.95rem; font-weight: 650; margin: 0 0 6px; color: var(--text-heading); }
 .action-card p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.5; margin: 0; }
 
@@ -692,28 +651,6 @@ onMounted(() => {
 .popular-card:hover .question-stats { color: #06b6d4; }
 .question-stats span { display: flex; align-items: center; gap: 4px; }
 
-/* ===== Stats ===== */
-.stats-section { margin-bottom: 20px; }
-.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-
-.stat-card {
-  background: var(--bg-card); border: 1px solid var(--border-card);
-  border-radius: 16px; padding: 22px 20px;
-  display: flex; align-items: center; gap: 16px;
-  box-shadow: var(--shadow-card);
-  transition: all 0.25s; cursor: default;
-}
-.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card-hover); }
-.stat-icon-wrap {
-  width: 50px; height: 50px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  background: var(--stat-bg, rgba(6,182,212,0.08));
-}
-.stat-icon { font-size: 1.3rem; background: var(--stat-color); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.stat-content { flex: 1; }
-.stat-number { font-size: 1.7rem; font-weight: 800; color: var(--text-heading); line-height: 1.1; margin-bottom: 2px; }
-.stat-label { font-size: 0.76rem; color: var(--text-muted); font-weight: 500; }
-
 /* ===== Dialog ===== */
 .notice-detail-meta {
   display: flex; justify-content: space-between; align-items: center;
@@ -735,7 +672,6 @@ onMounted(() => {
 @media (max-width: 1024px) {
   .action-cards { grid-template-columns: repeat(3, 1fr); }
   .popular-grid { grid-template-columns: repeat(2, 1fr); }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
   .navbar { padding: 0 16px; }
@@ -746,10 +682,8 @@ onMounted(() => {
   .action-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .action-card { padding: 24px 12px 20px; }
   .popular-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
 @media (max-width: 480px) {
   .action-cards { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: 1fr; }
 }
 </style>

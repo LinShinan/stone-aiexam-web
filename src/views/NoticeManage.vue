@@ -95,9 +95,9 @@
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
           <el-select v-model="noticeForm.priority" placeholder="请选择优先级">
-            <el-option label="普通" value="NORMAL" />
-            <el-option label="重要" value="IMPORTANT" />
-            <el-option label="紧急" value="URGENT" />
+            <el-option label="普通" :value="0" />
+            <el-option label="重要" :value="1" />
+            <el-option label="紧急" :value="2" />
           </el-select>
         </el-form-item>
         <el-form-item label="状态">
@@ -145,7 +145,7 @@ const noticeFormRef = ref()
 const viewDialogVisible = ref(false)
 const viewNotice = ref(null)
 
-const noticeForm = reactive({ id: null, title: '', content: '', type: 'SYSTEM', priority: 'NORMAL', isActive: true })
+const noticeForm = reactive({ id: null, title: '', content: '', type: 'SYSTEM', priority: 0, isActive: true })
 
 const noticeRules = {
   title: [{ required: true, message: '请输入公告标题', trigger: 'blur' }],
@@ -156,8 +156,8 @@ const noticeRules = {
 
 const getTypeText = (type) => ({ 'SYSTEM': '系统', 'FEATURE': '功能', 'NOTICE': '通知' }[type] || type)
 const getTypeTagColor = (type) => ({ 'SYSTEM': 'primary', 'FEATURE': 'success', 'NOTICE': 'info' }[type] || 'info')
-const getPriorityText = (priority) => ({ 'NORMAL': '普通', 'IMPORTANT': '重要', 'URGENT': '紧急' }[priority] || priority)
-const getPriorityTagColor = (priority) => ({ 'NORMAL': 'info', 'IMPORTANT': 'warning', 'URGENT': 'danger' }[priority] || 'info')
+const getPriorityText = (priority) => ({ 0: '普通', 1: '重要', 2: '紧急' }[priority] ?? priority)
+const getPriorityTagColor = (priority) => ({ 0: 'info', 1: 'warning', 2: 'danger' }[priority] ?? 'info')
 
 const getNoticeList = async () => {
   loading.value = true
@@ -175,7 +175,7 @@ const showAddDialog = () => { resetForm(); dialogTitle.value = '添加公告'; d
 const editNotice = (notice) => { Object.assign(noticeForm, notice); dialogTitle.value = '编辑公告'; dialogVisible.value = true; }
 
 const resetForm = () => {
-  Object.assign(noticeForm, { id: null, title: '', content: '', type: 'SYSTEM', priority: 'NORMAL', isActive: true })
+  Object.assign(noticeForm, { id: null, title: '', content: '', type: 'SYSTEM', priority: 0, isActive: true })
   if (noticeFormRef.value) noticeFormRef.value.resetFields()
 }
 

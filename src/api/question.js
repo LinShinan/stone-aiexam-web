@@ -17,7 +17,7 @@ export function getCategoryTree() {
 // ===== 管理端 CRUD =====
 
 export function getQuestionList(params) {
-  return request.get('/api/admin/questions/list', { params })
+  return request.get('/api/common/questions/list', { params })
 }
 
 export function createQuestion(data) {

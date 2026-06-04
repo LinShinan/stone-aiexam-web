@@ -30,12 +30,12 @@
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="name" label="分类名称" min-width="100">
           <template #default="{ row }">
-            <span class="admin-item-title">{{ row.name }}</span>
+            <span :class="row.parentId === 0 ? 'category-name-level1' : 'admin-item-title'">{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="级别" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.parentId === 0 ? 'primary' : 'success'" effect="plain">
+            <el-tag :type="row.parentId === 0 ? 'warning' : 'success'" effect="plain">
               {{ row.parentId === 0 ? '一级' : '二级' }}
             </el-tag>
           </template>
@@ -268,17 +268,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* ===== 提示卡片 ===== */
-
-
-
-/* ===== 表格卡片 ===== */
-
-
-
-
-
-
-
-/* ===== 详情对话框 ===== */
+/* ===== 一级分类名称高亮 ===== */
+.category-name-level1 {
+  font-weight: 650;
+  color: #e67e22;
+}
 </style>
