@@ -9,6 +9,18 @@
 
 **AI 出题 · 智能批阅 · 在线考试 · 学习排行**
 
+<p align="center">
+  <a href="https://github.com/LinShinan/stone-aiexam-web">
+    <img src="https://img.shields.io/badge/前端-React_Vue-6366f1?logo=vue.js&logoColor=white&style=for-the-badge" alt="前端仓库" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/LinShinan/stone-ai-exam">
+    <img src="https://img.shields.io/badge/后端-Spring_Boot-06b6d4?logo=springboot&logoColor=white&style=for-the-badge" alt="后端仓库" />
+  </a>
+</p>
+
+> 本项目为 **前端部分**，后端代码请访问 [stone-ai-exam](https://github.com/LinShinan/stone-ai-exam)
+
 ---
 
 ## 📸 预览

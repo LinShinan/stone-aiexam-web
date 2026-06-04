@@ -128,59 +128,6 @@ const routes = [
     component: () => import('../views/Practice.vue'),
     meta: { title: '刷题练习' }
   },
-  // 企业真题相关路由
-  {
-    path: '/interview-questions',
-    name: 'InterviewQuestionList',
-    component: () => import('../views/InterviewQuestionList.vue'),
-    meta: { title: '企业面试真题' }
-  },
-  {
-    path: '/interview-questions/:id',
-    name: 'InterviewQuestionDetail',
-    component: () => import('../views/InterviewQuestionDetail.vue'),
-    meta: { title: '真题详情' }
-  },
-  {
-    path: '/interview-practice/:id',
-    name: 'InterviewPractice',
-    component: () => import('../views/InterviewPractice.vue'),
-    meta: { title: '真题练习' }
-  },
-  // 模拟面试相关路由
-  {
-    path: '/mock-interview',
-    name: 'MockInterview',
-    component: () => import('../views/MockInterview.vue'),
-    meta: { title: '模拟面试' }
-  },
-  {
-    path: '/mock-interview/:id',
-    name: 'MockInterviewDetail',
-    component: () => import('../views/MockInterviewDetail.vue'),
-    meta: { title: '面试详情' }
-  },
-  {
-    path: '/interview-result/:id',
-    name: 'InterviewResult',
-    component: () => import('../views/InterviewResult.vue'),
-    meta: { title: '面试结果' }
-  },
-  // 用户贡献相关路由
-  // 已彻底删除 path:'/user-contributions' 路由配置
-  // 邀请码相关路由
-  {
-    path: '/interview-codes',
-    name: 'InterviewCodes',
-    component: () => import('../views/InterviewCodes.vue'),
-    meta: { title: '邀请码管理' }
-  },
-  {
-    path: '/interview-codes/activate',
-    name: 'ActivateCode',
-    component: () => import('../views/ActivateCode.vue'),
-    meta: { title: '激活邀请码' }
-  },
   {
     path: '/company-manage', // 企业管理页面路由
     name: 'CompanyManage', // 路由名称
