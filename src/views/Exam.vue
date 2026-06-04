@@ -10,8 +10,8 @@
             <span class="brain-dot"></span>
           </div>
         </div>
-        <h3>AI 正在批改你的试卷</h3>
-        <p class="grading-desc">题目数量不同，批改进度可能有所差异，请耐心等待</p>
+        <h3>{{ gradingTitle }}</h3>
+        <p class="grading-desc">{{ gradingDesc }}</p>
         <div class="grading-status">
           <span class="status-dot"></span>
           <span class="status-text">{{ gradingStatusText }}</span>
@@ -247,6 +247,8 @@ const totalTime = ref(0);
 const isSubmitting = ref(false);
 const isGrading = ref(false);
 const showSubmitConfirm = ref(false);
+const gradingTitle = ref('');
+const gradingDesc = ref('');
 const gradingStatusText = ref('');
 
 const getExamData = async () => {
@@ -284,7 +286,14 @@ const getExamData = async () => {
 
     // 正常的考试逻辑
     totalTime.value = (examRecord.value.paper?.duration || 0) * 60;
-    remainingTime.value = totalTime.value;
+    // 根据考试开始时间计算剩余时间，避免刷新后重新计时
+    const startAt = examRecord.value.createTime || examRecord.value.startTime;
+    if (startAt) {
+      const elapsed = Math.floor((Date.now() - new Date(startAt).getTime()) / 1000);
+      remainingTime.value = Math.max(0, totalTime.value - elapsed);
+    } else {
+      remainingTime.value = totalTime.value;
+    }
     startTimer();
   } catch (error) {
     console.error('加载考试信息失败:', error);
@@ -301,63 +310,33 @@ const startTimer = () => {
       remainingTime.value--;
     } else {
       clearInterval(timer.value);
-      // 时间到时强制交卷，不给选择机会
+      // 时间到时强制交卷
       ElMessage.error({
-        message: '⏰ 考试时间已到！系统将在3秒后自动交卷...',
-        duration: 3000,
+        message: '⏰ 考试时间已到，正在自动交卷...',
+        duration: 2000,
         showClose: false
       });
 
-      // 禁用所有输入控件，防止继续答题
+      // 禁用所有输入、显示遮罩、立即提交
       disableAllInputs();
-
-      // 3秒后强制提交
-      setTimeout(() => {
-        forceSubmit();
-      }, 3000);
+      isGrading.value = true;
+      gradingTitle.value = '考试时间已到';
+      gradingDesc.value = '正在自动提交试卷...';
+      gradingStatusText.value = '提交中';
+      forceSubmit();
     }
   }, 1000);
 };
 
-// 禁用所有输入控件的函数
+// 禁用所有输入控件
 const disableAllInputs = () => {
-  // 禁用所有单选框
-  const radioInputs = document.querySelectorAll('.el-radio__input input');
-  radioInputs.forEach(input => {
-    input.disabled = true;
+  document.querySelectorAll('.el-radio__input input, .el-checkbox__input input, .el-textarea__inner').forEach(el => {
+    el.disabled = true;
+    if (el.classList.contains('el-textarea__inner')) {
+      el.style.backgroundColor = '#f5f5f9';
+      el.style.cursor = 'not-allowed';
+    }
   });
-
-  // 禁用所有多选框
-  const checkboxInputs = document.querySelectorAll('.el-checkbox__input input');
-  checkboxInputs.forEach(input => {
-    input.disabled = true;
-  });
-
-  // 禁用所有文本框
-  const textareas = document.querySelectorAll('.el-textarea__inner');
-  textareas.forEach(textarea => {
-    textarea.disabled = true;
-    textarea.style.backgroundColor = '#f5f5f5';
-    textarea.style.cursor = 'not-allowed';
-  });
-
-  // 在页面顶部显示时间到期提示
-  showTimeUpOverlay();
-};
-
-// 显示时间到期遮罩
-const showTimeUpOverlay = () => {
-  const overlay = document.createElement('div');
-  overlay.className = 'time-up-overlay';
-  overlay.innerHTML = `
-    <div class="time-up-content">
-      <div class="time-up-icon">⏰</div>
-      <h3>考试时间已到</h3>
-      <p>系统正在自动交卷，请稍候...</p>
-      <div class="countdown-progress"></div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
 };
 
 // 强制交卷函数（时间到期时调用）
@@ -394,47 +373,18 @@ const forceSubmit = async () => {
 
     await submitAnswers(examRecordId, formattedAnswers);
 
-    // 移除时间到期遮罩
-    const overlay = document.querySelector('.time-up-overlay');
-    if (overlay) {
-      overlay.remove();
-    }
-
     ElMessage.success('时间到期，系统已自动交卷！');
 
-    // 显示AI判卷进度
-    isGrading.value = true;
-    const tips = [
-      '正在分析试卷结构...',
-      '正在批改客观题...',
-      '正在AI评估主观题...',
-      '正在复核答案准确性...',
-      '正在生成考试报告...'
-    ]
-    let tipIndex = 0
-    gradingStatusText.value = tips[0]
-    const tipTimer = setInterval(() => {
-      tipIndex = (tipIndex + 1) % tips.length
-      gradingStatusText.value = tips[tipIndex]
-    }, 2000)
-
+    gradingTitle.value = '批改完成！';
+    gradingDesc.value = 'AI 已完成阅卷，正在跳转...';
+    gradingStatusText.value = '✓ 报告已生成';
     setTimeout(() => {
-      clearInterval(tipTimer)
-      gradingStatusText.value = '批改完成，正在跳转...'
-      setTimeout(() => {
-        isGrading.value = false
-        router.push(`/exam-result/${examRecordId}`);
-      }, 1000);
-    }, 4000);
+      isGrading.value = false;
+      router.push(`/exam-result/${examRecordId}`);
+    }, 1000);
 
   } catch (error) {
     console.error('自动交卷失败:', error);
-
-    // 移除时间到期遮罩
-    const overlay = document.querySelector('.time-up-overlay');
-    if (overlay) {
-      overlay.remove();
-    }
 
     // 如果是重复提交错误，直接跳转
     if (error.message && error.message.includes('已完成')) {
@@ -534,67 +484,51 @@ const confirmSubmit = async () => {
     return;
   }
 
+  // 立即停止计时、禁用所有输入、显示提交遮罩
+  clearInterval(timer.value);
   isSubmitting.value = true;
+  disableAllInputs();
+  isGrading.value = true;
+  gradingTitle.value = 'AI 正在批改你的试卷';
+  gradingDesc.value = '正在保存答案并智能阅卷，请稍候...';
+  gradingStatusText.value = '提交中';
+
   const formattedAnswers = Object.entries(answers.value).map(([questionId, answer]) => ({
     questionId: Number(questionId),
-    // 对多选题的答案(数组)进行处理
     userAnswer: Array.isArray(answer) ? answer.sort().join(',') : answer
   }));
 
   try {
-    // 获取考试记录ID，添加调试信息
     const examRecordId = route.params.id;
 
     if (!examRecordId || examRecordId === 'undefined') {
       throw new Error('考试记录ID无效，请重新开始考试');
     }
 
-    // 提交答案
     await submitAnswers(examRecordId, formattedAnswers);
-    ElMessage.success('交卷成功！');
 
-    // 显示AI判卷进度（不模拟百分比，只轮播提示）
-    isGrading.value = true;
-    const tips = [
-      '正在分析试卷结构...',
-      '正在批改客观题...',
-      '正在AI评估主观题...',
-      '正在复核答案准确性...',
-      '正在生成考试报告...'
-    ]
-    let tipIndex = 0
-    gradingStatusText.value = tips[0]
-    const tipTimer = setInterval(() => {
-      tipIndex = (tipIndex + 1) % tips.length
-      gradingStatusText.value = tips[tipIndex]
-    }, 2000)
-
-    // 最短展示 5 秒后跳转（保证用户看到特效）
+    // 后端返回 = 保存 + AI批改都已完毕
+    gradingTitle.value = '批改完成！';
+    gradingDesc.value = 'AI 已完成阅卷，正在跳转...';
+    gradingStatusText.value = '✓ 报告已生成';
     setTimeout(() => {
-      clearInterval(tipTimer)
-      gradingStatusText.value = '批改完成，正在跳转...'
-      setTimeout(() => {
-        isGrading.value = false
-        router.push(`/exam-result/${examRecordId}`)
-      }, 800)
-    }, 5000);
+      isGrading.value = false;
+      router.push(`/exam-result/${examRecordId}`);
+    }, 1000);
 
   } catch (error) {
     console.error('提交试卷失败:', error);
+    isGrading.value = false;
+    isSubmitting.value = false;
 
-    // 如果是重复提交错误，直接跳转
     if (error.message && error.message.includes('已完成')) {
       ElMessage.success('考试已完成，正在跳转到结果页面...');
-      isGrading.value = false;
       setTimeout(() => {
         router.push(`/exam-result/${route.params.id}`);
       }, 1500);
     } else {
       ElMessage.error(error.message || '交卷失败，请稍后重试');
-      isGrading.value = false;
     }
-  } finally {
-    isSubmitting.value = false;
   }
 };
 
@@ -1598,70 +1532,6 @@ onUnmounted(() => {
 /* ============================================================
    时间到期遮罩（保留）
    ============================================================ */
-.time-up-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  animation: overlayIn 0.4s ease-out;
-}
-
-.time-up-content {
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.3);
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-  animation: dialogPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.time-up-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
-}
-
-.time-up-content h3 {
-  margin: 0 0 12px;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.time-up-content p {
-  margin: 0 0 24px;
-  font-size: 0.9rem;
-  color: #8090a8;
-}
-
-.countdown-progress {
-  width: 100%;
-  height: 4px;
-  background: #f1f5f9;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.countdown-progress::before {
-  content: '';
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, #06b6d4, #10b981);
-  border-radius: 2px;
-  animation: countdown 3s linear;
-}
-
-@keyframes countdown {
-  from { width: 0%; }
-  to { width: 100%; }
-}
-
 /* ============================================================
    响应式
    ============================================================ */

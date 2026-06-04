@@ -35,8 +35,25 @@ export function getExamRecordById(id) {
 // 获取我的考试记录
 export function getMyExamRecords() {
   return request({
-    url: '/api/student/exams/records',
+    url: '/api/student/exams/my-list',
     method: 'get'
+  })
+}
+
+// 获取个人信息
+export function getStudentProfile() {
+  return request({
+    url: '/api/student/users/profile',
+    method: 'get'
+  })
+}
+
+// 修改密码
+export function changePassword(data) {
+  return request({
+    url: '/api/student/users/password',
+    method: 'put',
+    data
   })
 }
 

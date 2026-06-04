@@ -13,22 +13,9 @@
         <el-button v-if="!studentName" class="btn-student-login" @click="goToLogin">
           <el-icon><User /></el-icon>学生登录
         </el-button>
-        <el-dropdown v-else trigger="click">
-          <el-button class="btn-student">
-            <el-icon><UserFilled /></el-icon>{{ studentName }}
-            <el-icon><ArrowDown /></el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="goToExam">
-                <el-icon><Document /></el-icon>我的考试
-              </el-dropdown-item>
-              <el-dropdown-item @click="handleStudentLogout" divided>
-                <el-icon><SwitchButton /></el-icon>退出登录
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <el-button v-else class="btn-student" @click="goToProfile">
+          <el-icon><UserFilled /></el-icon>{{ studentName }}
+        </el-button>
         <el-button class="btn-admin" @click="goToAdminLogin">
           <el-icon><Setting /></el-icon>管理后台
         </el-button>
@@ -195,7 +182,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
   Document, Edit, Trophy, Bell, View, Check, User,
-  ArrowRight, UserFilled, ArrowDown, SwitchButton, Setting
+  ArrowRight, UserFilled, Setting
 } from '@element-plus/icons-vue'
 import request from '../utils/request'
 
@@ -287,6 +274,7 @@ const getQuestionTypeText = (type) => ({ CHOICE: '选择题', JUDGE: '判断题'
 const getDifficultyType = (d) => ({ EASY: 'success', MEDIUM: 'primary', HARD: 'danger' }[d] || 'info')
 const getDifficultyText = (d) => ({ EASY: '简单', MEDIUM: '中等', HARD: '困难' }[d] || d)
 
+const goToProfile = () => router.push('/profile')
 const goToExam = () => router.push('/exam/list')
 const goToPractice = () => router.push('/practice')
 const goToRanking = () => router.push('/exam-ranking')
@@ -300,13 +288,6 @@ const checkStudentLogin = () => {
 }
 const goToLogin = () => router.push('/login')
 const goToAdminLogin = () => router.push('/admin/login')
-const handleStudentLogout = () => {
-  localStorage.removeItem('studentToken')
-  localStorage.removeItem('studentInfo')
-  studentName.value = ''
-  ElMessage.success('已退出登录')
-}
-const showAdminLogin = () => { adminLoginVisible.value = true }
 
 const handleAdminLogin = async () => {
   if (!adminLoginFormRef.value) return

@@ -13,6 +13,12 @@ const routes = [
     meta: { title: '首页' }
   },
   {
+    path: '/profile',
+    name: 'StudentProfile',
+    component: () => import('../views/StudentProfile.vue'),
+    meta: { title: '个人主页' }
+  },
+  {
     path: '/login',
     name: 'StudentLogin',
     component: () => import('../views/StudentLogin.vue'),
@@ -211,8 +217,8 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  // 学生端鉴权：访问 /exam/start 和 /exam/ 需要登录
-  if ((to.path.startsWith('/exam/start') || to.path.startsWith('/exam/')) && to.path !== '/exam/list' && to.path !== '/exam-ranking') {
+  // 学生端鉴权：访问 /exam/start、/exam/、/profile 需要登录
+  if ((to.path.startsWith('/exam/start') || to.path.startsWith('/exam/') || to.path === '/profile') && to.path !== '/exam/list' && to.path !== '/exam-ranking') {
     const studentToken = localStorage.getItem('studentToken')
     if (!studentToken) {
       next({ path: '/login', query: { redirect: to.fullPath } })
